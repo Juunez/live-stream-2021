@@ -56,5 +56,6 @@ RUN cd /usr/local/src && \
 	make configs
 
 EXPOSE 8088
+EXPOSE 8089
 
 CMD ["/usr/local/bin/janus"]
