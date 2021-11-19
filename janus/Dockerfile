@@ -26,6 +26,7 @@ RUN apt-get -y update && \
         libavutil-dev \
 		libavformat-dev \
 		libavcodec-dev \
+		libusrsctp-dev \
         gtk-doc-tools && \
     apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
@@ -33,9 +34,7 @@ RUN apt-get -y update && \
         #libwebsockets-dev \ 
 		#libnanomsg-dev \
 		#librabbitmq-dev \
-#unknown:
-		#libusrsctp-dev \
-
+		
 RUN cd /tmp && \
 	git clone https://gitlab.freedesktop.org/libnice/libnice && \
 	cd libnice && \
