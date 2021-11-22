@@ -1,0 +1,7 @@
+http://127.0.0.1:8080/janus-gateway/html/screensharingtest.html
+http://localhost:8088/janus/info
+
+https://groups.google.com/g/meetecho-janus/c/JnPKN4gQ1Yg
+chrome://flags/#unsafely-treat-insecure-origin-as-secure
+
+https://mrcoles.com/how-start-local-web-server-view-html-files/
