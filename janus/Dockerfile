@@ -53,8 +53,8 @@ RUN cd /usr/local/src && \
 	make && \
 	make install && \
 	make configs
-
+RUN cd .
 EXPOSE 8088
 EXPOSE 8089
 
-CMD ["/usr/local/bin/janus"]
+CMD ["/usr/local/bin/janus", "--log-file=/usr/local/bin/logs"]
