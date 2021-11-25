@@ -8,9 +8,12 @@ RUN apt-get -y update && \
 
 RUN cd /usr/local/src
 RUN wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1UHfAbKu4WU9VKIcnbyDTfEPA4Rf4NDel' -O favicon.ico
-RUN git clone https://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@github.com/Juunez/live-stream && \
-	cd live-stream/site
+RUN mkdir live-stream && \
+	cd live-stream && \
+	git init && \
+	git pull https://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@github.com/Juunez/live-stream.git && \
+	cd site
 
 EXPOSE 8080
 
-CMD ["python3", "-m", "http.server", "8080"]
+CMD ["python3", "-m", "http.server", "--directory", "live-stream/site", "8080"]
