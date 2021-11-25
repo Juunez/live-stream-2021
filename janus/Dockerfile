@@ -5,7 +5,6 @@ RUN apt-get -y update && \
         libmicrohttpd-dev \
         libjansson-dev \
 	    libssl-dev \
-        #libsrtp2-dev \
         libsofia-sip-ua-dev \
         libglib2.0-dev \
 	    libopus-dev \
