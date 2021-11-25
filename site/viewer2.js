@@ -61,7 +61,6 @@ $(document).ready(function() {
 									// Prepare the username registration
 									$('#screenmenu').removeClass('hide').show();
 									$('#createnow').removeClass('hide').show();
-									$('#create').click(preShareScreen);
 									$('#joinnow').removeClass('hide').show();
 									$('#join').click(joinScreen);
 									$('#desc').focus();
@@ -244,101 +243,6 @@ $(document).ready(function() {
 	}});
 });
 
-function checkEnterShare(field, event) {
-	var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
-	if(theCode == 13) {
-		preShareScreen();
-		return false;
-	} else {
-		return true;
-	}
-}
-
-function preShareScreen() {
-	if(!Janus.isExtensionEnabled()) {
-		bootbox.alert("You're using Chrome but don't have the screensharing extension installed: click <b><a href='https://chrome.google.com/webstore/detail/janus-webrtc-screensharin/hapfgfdkleiggjjpfpenajgdnfckjpaj' target='_blank'>here</a></b> to do so", function() {
-			window.location.reload();
-		});
-		return;
-	}
-	// Create a new room
-	$('#desc').attr('disabled', true);
-	$('#create').attr('disabled', true).unbind('click');
-	$('#roomid').attr('disabled', true);
-	$('#join').attr('disabled', true).unbind('click');
-	if($('#desc').val() === "") {
-		bootbox.alert("Please insert a description for the room");
-		$('#desc').removeAttr('disabled', true);
-		$('#create').removeAttr('disabled', true).click(preShareScreen);
-		$('#roomid').removeAttr('disabled', true);
-		$('#join').removeAttr('disabled', true).click(joinScreen);
-		return;
-	}
-	capture = "screen";
-	if(navigator.mozGetUserMedia) {
-		// Firefox needs a different constraint for screen and window sharing
-		bootbox.dialog({
-			title: "Share whole screen or a window?",
-			message: "Firefox handles screensharing in a different way: are you going to share the whole screen, or would you rather pick a single window/application to share instead?",
-			buttons: {
-				screen: {
-					label: "Share screen",
-					className: "btn-primary",
-					callback: function() {
-						capture = "screen";
-						shareScreen();
-					}
-				},
-				window: {
-					label: "Pick a window",
-					className: "btn-success",
-					callback: function() {
-						capture = "window";
-						shareScreen();
-					}
-				}
-			},
-			onEscape: function() {
-				$('#desc').removeAttr('disabled', true);
-				$('#create').removeAttr('disabled', true).click(preShareScreen);
-				$('#roomid').removeAttr('disabled', true);
-				$('#join').removeAttr('disabled', true).click(joinScreen);
-			}
-		});
-	} else {
-		shareScreen();
-	}
-}
-
-function shareScreen() {
-	// Create a new room
-	var desc = $('#desc').val();
-	role = "publisher";
-	var create = {
-		request: "create",
-		description: desc,
-		bitrate: 500000,
-		publishers: 1
-	};
-	screentest.send({ message: create, success: function(result) {
-		var event = result["videoroom"];
-		Janus.debug("Event: " + event);
-		if(event) {
-			// Our own screen sharing session has been created, join it
-			room = result["room"];
-			Janus.log("Screen sharing session created: " + room);
-			myusername = randomString(12);
-			var register = {
-				request: "join",
-				room: room,
-				ptype: "publisher",
-				display: myusername
-			};
-			screentest.send({ message: register });
-		}
-	}});
-}
-
 function checkEnterJoin(field, event) {
 	var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
 	if(theCode == 13) {
@@ -359,7 +263,6 @@ function joinScreen() {
 	if(isNaN(roomid)) {
 		bootbox.alert("Session identifiers are numeric only");
 		$('#desc').removeAttr('disabled', true);
-		$('#create').removeAttr('disabled', true).click(preShareScreen);
 		$('#roomid').removeAttr('disabled', true);
 		$('#join').removeAttr('disabled', true).click(joinScreen);
 		return;
