@@ -9,7 +9,7 @@ var janus = null;
 var sfutest = null;
 var opaqueId = "videoroomtest-"+Janus.randomString(12);
 
-var myroom = 1234;	// Demo room
+var myroom = 523487953;	// Demo room
 if(getQueryStringValue("room") !== "")
 	myroom = parseInt(getQueryStringValue("room"));
 var myusername = null;
@@ -26,7 +26,6 @@ var doSimulcast2 = (getQueryStringValue("simulcast2") === "yes" || getQueryStrin
 var acodec = (getQueryStringValue("acodec") !== "" ? getQueryStringValue("acodec") : null);
 var vcodec = (getQueryStringValue("vcodec") !== "" ? getQueryStringValue("vcodec") : null);
 var doDtx = (getQueryStringValue("dtx") === "yes" || getQueryStringValue("dtx") === "true");
-var subscriber_mode = (getQueryStringValue("subscriber-mode") === "yes" || getQueryStringValue("subscriber-mode") === "true");
 
 $(document).ready(function() {
 	// Initialize the library (all console debuggers enabled)
@@ -125,12 +124,8 @@ $(document).ready(function() {
 											myid = msg["id"];
 											mypvtid = msg["private_id"];
 											Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
-											if(subscriber_mode) {
-												$('#videojoin').hide();
-												$('#videos').removeClass('hide').show();
-											} else {
-												publishOwnFeed(true);
-											}
+											$('#videojoin').hide();
+											$('#videos').removeClass('hide').show();
 											// Any new feed to attach to?
 											if(msg["publishers"]) {
 												var list = msg["publishers"];
@@ -243,50 +238,6 @@ $(document).ready(function() {
 										}
 									}
 								},
-								onlocalstream: function(stream) {
-									Janus.debug(" ::: Got a local stream :::", stream);
-									mystream = stream;
-									$('#videojoin').hide();
-									$('#videos').removeClass('hide').show();
-									if($('#myvideo').length === 0) {
-										$('#videolocal').append('<video class="rounded centered" id="myvideo" width="100%" height="100%" autoplay playsinline muted="muted"/>');
-										// Add a 'mute' button
-										$('#videolocal').append('<button class="btn btn-warning btn-xs" id="mute" style="position: absolute; bottom: 0px; left: 0px; margin: 15px;">Mute</button>');
-										$('#mute').click(toggleMute);
-										// Add an 'unpublish' button
-										$('#videolocal').append('<button class="btn btn-warning btn-xs" id="unpublish" style="position: absolute; bottom: 0px; right: 0px; margin: 15px;">Unpublish</button>');
-										$('#unpublish').click(unpublishOwnFeed);
-									}
-									$('#publisher').removeClass('hide').html(myusername).show();
-									Janus.attachMediaStream($('#myvideo').get(0), stream);
-									$("#myvideo").get(0).muted = "muted";
-									if(sfutest.webrtcStuff.pc.iceConnectionState !== "completed" &&
-											sfutest.webrtcStuff.pc.iceConnectionState !== "connected") {
-										$("#videolocal").parent().parent().block({
-											message: '<b>Publishing...</b>',
-											css: {
-												border: 'none',
-												backgroundColor: 'transparent',
-												color: 'white'
-											}
-										});
-									}
-									var videoTracks = stream.getVideoTracks();
-									if(!videoTracks || videoTracks.length === 0) {
-										// No webcam
-										$('#myvideo').hide();
-										if($('#videolocal .no-video-container').length === 0) {
-											$('#videolocal').append(
-												'<div class="no-video-container">' +
-													'<i class="fa fa-video-camera fa-5 no-video-icon"></i>' +
-													'<span class="no-video-text">No webcam available</span>' +
-												'</div>');
-										}
-									} else {
-										$('#videolocal .no-video-container').remove();
-										$('#myvideo').removeClass('hide').show();
-									}
-								},
 								onremotestream: function(stream) {
 									// The publisher stream is sendonly, we don't expect anything here
 								},
@@ -362,74 +313,6 @@ function registerUsername() {
 	}
 }
 
-function publishOwnFeed(useAudio) {
-	// Publish our stream
-	$('#publish').attr('disabled', true).unbind('click');
-	sfutest.createOffer(
-		{
-			// Add data:true here if you want to publish datachannels as well
-			media: { audioRecv: false, videoRecv: false, audioSend: useAudio, videoSend: true },	// Publishers are sendonly
-			// If you want to test simulcasting (Chrome and Firefox only), then
-			// pass a ?simulcast=true when opening this demo page: it will turn
-			// the following 'simulcast' property to pass to janus.js to true
-			simulcast: doSimulcast,
-			simulcast2: doSimulcast2,
-			customizeSdp: function(jsep) {
-				// If DTX is enabled, munge the SDP
-				if(doDtx) {
-					jsep.sdp = jsep.sdp
-						.replace("useinbandfec=1", "useinbandfec=1;usedtx=1")
-				}
-			},
-			success: function(jsep) {
-				Janus.debug("Got publisher SDP!", jsep);
-				var publish = { request: "configure", audio: useAudio, video: true };
-				// You can force a specific codec to use when publishing by using the
-				// audiocodec and videocodec properties, for instance:
-				// 		publish["audiocodec"] = "opus"
-				// to force Opus as the audio codec to use, or:
-				// 		publish["videocodec"] = "vp9"
-				// to force VP9 as the videocodec to use. In both case, though, forcing
-				// a codec will only work if: (1) the codec is actually in the SDP (and
-				// so the browser supports it), and (2) the codec is in the list of
-				// allowed codecs in a room. With respect to the point (2) above,
-				// refer to the text in janus.plugin.videoroom.jcfg for more details.
-				// We allow people to specify a codec via query string, for demo purposes
-				if(acodec)
-					publish["audiocodec"] = acodec;
-				if(vcodec)
-					publish["videocodec"] = vcodec;
-				sfutest.send({ message: publish, jsep: jsep });
-			},
-			error: function(error) {
-				Janus.error("WebRTC error:", error);
-				if(useAudio) {
-					 publishOwnFeed(false);
-				} else {
-					bootbox.alert("WebRTC error... " + error.message);
-					$('#publish').removeAttr('disabled').click(function() { publishOwnFeed(true); });
-				}
-			}
-		});
-}
-
-function toggleMute() {
-	var muted = sfutest.isAudioMuted();
-	Janus.log((muted ? "Unmuting" : "Muting") + " local stream...");
-	if(muted)
-		sfutest.unmuteAudio();
-	else
-		sfutest.muteAudio();
-	muted = sfutest.isAudioMuted();
-	$('#mute').html(muted ? "Unmute" : "Mute");
-}
-
-function unpublishOwnFeed() {
-	// Unpublish our stream
-	$('#unpublish').attr('disabled', true).unbind('click');
-	var unpublish = { request: "unpublish" };
-	sfutest.send({ message: unpublish });
-}
 
 function newRemoteFeed(id, display, audio, video) {
 	// A new feed has been published, create a new plugin handle and attach to it as a subscriber

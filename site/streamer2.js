@@ -61,6 +61,7 @@ $(document).ready(function() {
 									// Prepare the username registration
 									$('#screenmenu').removeClass('hide').show();
 									$('#createnow').removeClass('hide').show();
+									$('#create').click(preShareScreen);
 									$('#joinnow').removeClass('hide').show();
 									$('#join').click(joinScreen);
 									$('#desc').focus();
@@ -243,6 +244,101 @@ $(document).ready(function() {
 	}});
 });
 
+function checkEnterShare(field, event) {
+	var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+	if(theCode == 13) {
+		preShareScreen();
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function preShareScreen() {
+	if(!Janus.isExtensionEnabled()) {
+		bootbox.alert("You're using Chrome but don't have the screensharing extension installed: click <b><a href='https://chrome.google.com/webstore/detail/janus-webrtc-screensharin/hapfgfdkleiggjjpfpenajgdnfckjpaj' target='_blank'>here</a></b> to do so", function() {
+			window.location.reload();
+		});
+		return;
+	}
+	// Create a new room
+	$('#desc').attr('disabled', true);
+	$('#create').attr('disabled', true).unbind('click');
+	$('#roomid').attr('disabled', true);
+	$('#join').attr('disabled', true).unbind('click');
+	if($('#desc').val() === "") {
+		bootbox.alert("Please insert a description for the room");
+		$('#desc').removeAttr('disabled', true);
+		$('#create').removeAttr('disabled', true).click(preShareScreen);
+		$('#roomid').removeAttr('disabled', true);
+		$('#join').removeAttr('disabled', true).click(joinScreen);
+		return;
+	}
+	capture = "screen";
+	if(navigator.mozGetUserMedia) {
+		// Firefox needs a different constraint for screen and window sharing
+		bootbox.dialog({
+			title: "Share whole screen or a window?",
+			message: "Firefox handles screensharing in a different way: are you going to share the whole screen, or would you rather pick a single window/application to share instead?",
+			buttons: {
+				screen: {
+					label: "Share screen",
+					className: "btn-primary",
+					callback: function() {
+						capture = "screen";
+						shareScreen();
+					}
+				},
+				window: {
+					label: "Pick a window",
+					className: "btn-success",
+					callback: function() {
+						capture = "window";
+						shareScreen();
+					}
+				}
+			},
+			onEscape: function() {
+				$('#desc').removeAttr('disabled', true);
+				$('#create').removeAttr('disabled', true).click(preShareScreen);
+				$('#roomid').removeAttr('disabled', true);
+				$('#join').removeAttr('disabled', true).click(joinScreen);
+			}
+		});
+	} else {
+		shareScreen();
+	}
+}
+
+function shareScreen() {
+	// Create a new room
+	var desc = $('#desc').val();
+	role = "publisher";
+	var create = {
+		request: "create",
+		description: desc,
+		bitrate: 500000,
+		publishers: 1
+	};
+	screentest.send({ message: create, success: function(result) {
+		var event = result["videoroom"];
+		Janus.debug("Event: " + event);
+		if(event) {
+			// Our own screen sharing session has been created, join it
+			room = result["room"];
+			Janus.log("Screen sharing session created: " + room);
+			myusername = randomString(12);
+			var register = {
+				request: "join",
+				room: room,
+				ptype: "publisher",
+				display: myusername
+			};
+			screentest.send({ message: register });
+		}
+	}});
+}
+
 function checkEnterJoin(field, event) {
 	var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
 	if(theCode == 13) {
@@ -263,6 +359,7 @@ function joinScreen() {
 	if(isNaN(roomid)) {
 		bootbox.alert("Session identifiers are numeric only");
 		$('#desc').removeAttr('disabled', true);
+		$('#create').removeAttr('disabled', true).click(preShareScreen);
 		$('#roomid').removeAttr('disabled', true);
 		$('#join').removeAttr('disabled', true).click(joinScreen);
 		return;
@@ -371,6 +468,58 @@ function newRemoteFeed(id, display) {
 				if(spinner)
 					spinner.stop();
 				spinner = null;
+			}
+		});
+}
+
+
+function publishOwnFeed(useAudio) {
+	// Publish our stream
+	$('#publish').attr('disabled', true).unbind('click');
+	sfutest.createOffer(
+		{
+			// Add data:true here if you want to publish datachannels as well
+			media: { audioRecv: false, videoRecv: false, audioSend: useAudio, videoSend: true },	// Publishers are sendonly
+			// If you want to test simulcasting (Chrome and Firefox only), then
+			// pass a ?simulcast=true when opening this demo page: it will turn
+			// the following 'simulcast' property to pass to janus.js to true
+			simulcast: doSimulcast,
+			simulcast2: doSimulcast2,
+			customizeSdp: function(jsep) {
+				// If DTX is enabled, munge the SDP
+				if(doDtx) {
+					jsep.sdp = jsep.sdp
+						.replace("useinbandfec=1", "useinbandfec=1;usedtx=1")
+				}
+			},
+			success: function(jsep) {
+				Janus.debug("Got publisher SDP!", jsep);
+				var publish = { request: "configure", audio: useAudio, video: true };
+				// You can force a specific codec to use when publishing by using the
+				// audiocodec and videocodec properties, for instance:
+				// 		publish["audiocodec"] = "opus"
+				// to force Opus as the audio codec to use, or:
+				// 		publish["videocodec"] = "vp9"
+				// to force VP9 as the videocodec to use. In both case, though, forcing
+				// a codec will only work if: (1) the codec is actually in the SDP (and
+				// so the browser supports it), and (2) the codec is in the list of
+				// allowed codecs in a room. With respect to the point (2) above,
+				// refer to the text in janus.plugin.videoroom.jcfg for more details.
+				// We allow people to specify a codec via query string, for demo purposes
+				if(acodec)
+					publish["audiocodec"] = acodec;
+				if(vcodec)
+					publish["videocodec"] = vcodec;
+				sfutest.send({ message: publish, jsep: jsep });
+			},
+			error: function(error) {
+				Janus.error("WebRTC error:", error);
+				if(useAudio) {
+					 publishOwnFeed(false);
+				} else {
+					bootbox.alert("WebRTC error... " + error.message);
+					$('#publish').removeAttr('disabled').click(function() { publishOwnFeed(true); });
+				}
 			}
 		});
 }
