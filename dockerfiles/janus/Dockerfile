@@ -54,9 +54,6 @@ COPY . /usr/local/src
 
 RUN cd /usr/local/src && \
     git clone https://github.com/meetecho/janus-gateway.git && \
-	git clone https://github.com/Juunez/video-cfg && \
-	rm /usr/local/src/janus-gateway/conf/janus.plugin.videoroom.jcfg.sample && \
-	cp video-cfg/janus.plugin.videoroom.jcfg.sample /usr/local/src/janus-gateway/conf && \
     cd janus-gateway && \
 	./autogen.sh && \
 	./configure --enable-post-processing --prefix=/usr/local && \

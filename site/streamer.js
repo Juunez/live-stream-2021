@@ -9,9 +9,7 @@ var janus = null;
 var sfutest = null;
 var opaqueId = "videoroomtest-"+Janus.randomString(12);
 
-var myroom = 523487953;	// Demo room
-if(getQueryStringValue("room") !== "")
-	myroom = parseInt(getQueryStringValue("room"));
+var myroom = null;
 var myusername = null;
 var myid = null;
 var mystream = null;
@@ -325,17 +323,6 @@ function registerUsername() {
 				sfutest.send({ message: register });
 			}
 		}});
-
-		/*
-		var register = {
-			request: "join",
-			room: myroom,
-			ptype: "publisher",
-			display: username
-		};
-		myusername = username;
-		sfutest.send({ message: register });
-		*/
 	}
 }
 
