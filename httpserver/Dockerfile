@@ -10,4 +10,6 @@ RUN wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1
 RUN git clone https://github.com/meetecho/janus-gateway.git
 RUN cd janus-gateway/html
 
+EXPOSE 8080
+
 CMD ["python3", "-m", "http.server", "8080"]
