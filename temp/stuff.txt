@@ -10,4 +10,7 @@ https://mrcoles.com/how-start-local-web-server-view-html-files/
 
 1UHfAbKu4WU9VKIcnbyDTfEPA4Rf4NDel
 
-wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1UHfAbKu4WU9VKIcnbyDTfEPA4Rf4NDel' -O favicon.ico
+wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1UHfAbKu4WU9VKIcnbyDTfEPA4Rf4NDel' 
+-O favicon.ico
+
+docker logs -f $container_id
