@@ -123,6 +123,7 @@ $(document).ready(function() {
 										if(event === "joined") {
 											// Publisher/manager created, negotiate WebRTC and attach to existing feeds, if any
 											myid = msg["id"];
+											$('#session').html(myroom);
 											mypvtid = msg["private_id"];
 											Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
 											if(subscriber_mode) {
@@ -141,11 +142,11 @@ $(document).ready(function() {
 											if(msg["leaving"]) {
 												// One of the publishers has gone away?
 												var leaving = msg["leaving"];
-												Janus.log("Publisher left: " + leaving);
+												Janus.log("User left: " + leaving);
 											} else if(msg["unpublished"]) {
 												// One of the publishers has unpublished?
 												var unpublished = msg["unpublished"];
-												Janus.log("Publisher left: " + unpublished);
+												Janus.log("User left: " + unpublished);
 												if(unpublished === 'ok') {
 													// That's us
 													sfutest.hangup();
@@ -298,6 +299,34 @@ function registerUsername() {
 			$('#register').removeAttr('disabled').click(registerUsername);
 			return;
 		}
+		// Create a new room
+		var desc = $('#desc').val();
+		role = "publisher";
+		var create = {
+			request: "create",
+			description: desc,
+			bitrate: 500000,
+			publishers: 1
+		};
+		sfutest.send({ message: create, success: function(result) {
+			var event = result["videoroom"];
+			Janus.debug("Event: " + event);
+			if(event) {
+				// Our own video sharing session has been created, join it
+				myroom = result["room"];
+				Janus.log("Video sharing session created: " + myroom);
+				myusername = username;
+				var register = {
+					request: "join",
+					room: myroom,
+					ptype: "publisher",
+					display: myusername
+				};
+				sfutest.send({ message: register });
+			}
+		}});
+
+		/*
 		var register = {
 			request: "join",
 			room: myroom,
@@ -306,6 +335,7 @@ function registerUsername() {
 		};
 		myusername = username;
 		sfutest.send({ message: register });
+		*/
 	}
 }
 

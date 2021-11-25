@@ -17,6 +17,7 @@ var myid = null;
 var mystream = null;
 // We use this other ID just to map our subscriptions to us
 var mypvtid = null;
+var role = null;
 
 var feeds = [];
 var bitrateTimer = [];
@@ -26,6 +27,16 @@ var doSimulcast2 = (getQueryStringValue("simulcast2") === "yes" || getQueryStrin
 var acodec = (getQueryStringValue("acodec") !== "" ? getQueryStringValue("acodec") : null);
 var vcodec = (getQueryStringValue("vcodec") !== "" ? getQueryStringValue("vcodec") : null);
 var doDtx = (getQueryStringValue("dtx") === "yes" || getQueryStringValue("dtx") === "true");
+
+function randomString(len, charSet) {
+    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var randomString = '';
+    for (var i = 0; i < len; i++) {
+    	var randomPoz = Math.floor(Math.random() * charSet.length);
+    	randomString += charSet.substring(randomPoz,randomPoz+1);
+    }
+    return randomString;
+}
 
 $(document).ready(function() {
 	// Initialize the library (all console debuggers enabled)
@@ -56,7 +67,9 @@ $(document).ready(function() {
 									// Prepare the username registration
 									$('#videojoin').removeClass('hide').show();
 									$('#registernow').removeClass('hide').show();
-									$('#register').click(registerUsername);
+									$('#joinnow').removeClass('hide').show();
+									$('#join').click(joinSession);
+									//$('#register').click(registerUsername);
 									$('#username').focus();
 									$('#start').removeAttr('disabled').html("Stop")
 										.click(function() {
@@ -122,6 +135,7 @@ $(document).ready(function() {
 										if(event === "joined") {
 											// Publisher/manager created, negotiate WebRTC and attach to existing feeds, if any
 											myid = msg["id"];
+											$('#session').html(myroom);
 											mypvtid = msg["private_id"];
 											Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
 											$('#videojoin').hide();
@@ -161,7 +175,7 @@ $(document).ready(function() {
 											} else if(msg["leaving"]) {
 												// One of the publishers has gone away?
 												var leaving = msg["leaving"];
-												Janus.log("Publisher left: " + leaving);
+												Janus.log("User left: " + leaving);
 												var remoteFeed = null;
 												for(var i=1; i<6; i++) {
 													if(feeds[i] && feeds[i].rfid == leaving) {
@@ -179,7 +193,7 @@ $(document).ready(function() {
 											} else if(msg["unpublished"]) {
 												// One of the publishers has unpublished?
 												var unpublished = msg["unpublished"];
-												Janus.log("Publisher left: " + unpublished);
+												Janus.log("User left: " + unpublished);
 												if(unpublished === 'ok') {
 													// That's us
 													sfutest.hangup();
@@ -269,50 +283,39 @@ $(document).ready(function() {
 function checkEnter(field, event) {
 	var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
 	if(theCode == 13) {
-		registerUsername();
+		joinScreen();
+		//registerUsername();
 		return false;
 	} else {
 		return true;
 	}
 }
 
-function registerUsername() {
-	if($('#username').length === 0) {
-		// Create fields to register
-		$('#register').click(registerUsername);
-		$('#username').focus();
-	} else {
-		// Try a registration
-		$('#username').attr('disabled', true);
-		$('#register').attr('disabled', true).unbind('click');
-		var username = $('#username').val();
-		if(username === "") {
-			$('#you')
-				.removeClass().addClass('label label-warning')
-				.html("Insert your display name (e.g., pippo)");
-			$('#username').removeAttr('disabled');
-			$('#register').removeAttr('disabled').click(registerUsername);
-			return;
-		}
-		if(/[^a-zA-Z0-9]/.test(username)) {
-			$('#you')
-				.removeClass().addClass('label label-warning')
-				.html('Input is not alphanumeric');
-			$('#username').removeAttr('disabled').val("");
-			$('#register').removeAttr('disabled').click(registerUsername);
-			return;
-		}
-		var register = {
-			request: "join",
-			room: myroom,
-			ptype: "publisher",
-			display: username
-		};
-		myusername = username;
-		sfutest.send({ message: register });
+function joinSession() {
+	// Join an existing video sharing session
+	$('#desc').attr('disabled', true);
+	$('#create').attr('disabled', true).unbind('click');
+	$('#roomid').attr('disabled', true);
+	$('#join').attr('disabled', true).unbind('click');
+	var roomid = $('#roomid').val();
+	if(isNaN(roomid)) {
+		bootbox.alert("Session identifiers are numeric only");
+		$('#desc').removeAttr('disabled', true);
+		$('#roomid').removeAttr('disabled', true);
+		$('#join').removeAttr('disabled', true).click(joinSession);
+		return;
 	}
+	myroom = parseInt(roomid);
+	role = "listener";
+	myusername = randomString(12);
+	var register = {
+		request: "join",
+		room: myroom,
+		ptype: "publisher",
+		display: myusername
+	};
+	sfutest.send({ message: register });
 }
-
 
 function newRemoteFeed(id, display, audio, video) {
 	// A new feed has been published, create a new plugin handle and attach to it as a subscriber
