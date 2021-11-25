@@ -1,0 +1,14 @@
+sudo apt-get -y update && sudo apt-get install -y libmicrohttpd-dev libjansson-dev libssl-dev libsrtp2-dev libsofia-sip-ua-dev libglib2.0-dev libopus-dev libogg-dev libcurl4-openssl-dev liblua5.3-dev libconfig-dev pkg-config gengetopt libtool automake build-essential wget git libwebsockets-dev libnanomsg-dev librabbitmq-dev libavutil-dev libavformat-dev libavcodec-dev libusrsctp-dev gtk-doc-tools && sudo apt-get clean
+sudo git clone https://gitlab.freedesktop.org/libnice/libnice && cd libnice && sudo git checkout 0.1.17 && sudo ./autogen.sh && sudo ./configure --prefix=/usr && sudo make && sudo make install
+cd .. & sudo git clone https://github.com/meetecho/janus-gateway.git && cd janus-gateway && sudo ./autogen.sh
+
+sudo ./configure --enable-post-processing --prefix=/usr/local
+TAI
+sudo ./configure --disable-data-channels --disable-websockets --disable-rabbitmq --disable-docs --prefix=/opt/janus LDFLAGS="-L/usr/local/lib -Wl,-rpath=/usr/local/lib" CFLAGS="-I/usr/local/include"
+
+sudo make && sudo make install && sudo make configs
+
+/usr/local/bin/janus
+
+cd /opt/janus/bin/ 
+./janus -F /opt/janus/etc/janus/
