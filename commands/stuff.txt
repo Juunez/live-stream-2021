@@ -13,4 +13,4 @@ https://mrcoles.com/how-start-local-web-server-view-html-files/
 wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1UHfAbKu4WU9VKIcnbyDTfEPA4Rf4NDel' 
 -O favicon.ico
 
-docker logs -f $container_id
+docker logs -f sharp_lamarr
