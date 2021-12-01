@@ -131,6 +131,10 @@ RUN cd ~/ffmpeg_sources && \
 	make install && \
 	hash -r
 
+#increase CACHEBUST by 1 if live-stream repo changes are needed here
+ARG CACHEBUST=1
+RUN echo "$CACHEBUST"
+
 RUN cd /usr/local/src && \
 	mkdir live-stream && \
 	cd live-stream && \
