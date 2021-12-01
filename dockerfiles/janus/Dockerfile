@@ -2,6 +2,8 @@ FROM ubuntu:latest
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -y update && \
 	apt-get install -y \
+        apt-transport-https \
+        ca-certificates \
         libmicrohttpd-dev \
         libjansson-dev \
 	    libssl-dev \
@@ -33,6 +35,8 @@ RUN apt-get -y update && \
     apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 
+RUN update-ca-certificates
+
 RUN cd /tmp && \
 	wget https://github.com/cisco/libsrtp/archive/v2.4.2.tar.gz && \
 	tar xfv v2.4.2.tar.gz && \
@@ -62,6 +66,5 @@ RUN cd /usr/local/src && \
 	make configs
 
 EXPOSE 8088
-EXPOSE 8089
 
 CMD ["/usr/local/bin/janus", "--log-file=/usr/local/bin/logs"]

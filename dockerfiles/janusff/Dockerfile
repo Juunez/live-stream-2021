@@ -4,9 +4,35 @@ RUN apt-get -y update && \
 	apt-get install -y \
         apt-transport-https \
         ca-certificates \
-        autoconf \
-		automake \
+        libmicrohttpd-dev \
+        libjansson-dev \
+	    libssl-dev \
+        libsofia-sip-ua-dev \
+        libglib2.0-dev \
+	    libopus-dev \
+        libogg-dev \
+        libcurl4-openssl-dev \
+        liblua5.3-dev \
+	    libconfig-dev \
+        pkg-config \
+        gengetopt \
+        libtool \
+        automake \
 		build-essential \
+		wget \
+		git \
+        libwebsockets-dev \ 
+		libnanomsg-dev \
+		librabbitmq-dev \
+        libavutil-dev \
+		libavformat-dev \
+		libavcodec-dev \
+		libusrsctp-dev \
+        gtk-doc-tools \
+		libwebsockets-dev \ 
+		libnanomsg-dev \
+		librabbitmq-dev \
+        autoconf \
 		cmake \
 		nano \
 		git-core \
@@ -15,7 +41,6 @@ RUN apt-get -y update && \
 		libgnutls28-dev \
 		libmp3lame-dev \
 		libsdl2-dev \
-		libtool \
 		libva-dev \
 		libvdpau-dev \
 		libvorbis-dev \
@@ -24,15 +49,47 @@ RUN apt-get -y update && \
 		libxcb-xfixes0-dev \
 		meson \
 		ninja-build \
-		pkg-config \
 		texinfo \
-		wget \
 		yasm \
 		zlib1g-dev \
-		libunistring-dev \
-		nasm
+        nasm \
+		libunistring-dev && \
+    apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
 
 RUN update-ca-certificates
+
+#janus
+
+RUN cd /tmp && \
+	wget https://github.com/cisco/libsrtp/archive/v2.4.2.tar.gz && \
+	tar xfv v2.4.2.tar.gz && \
+	cd libsrtp-2.4.2 && \
+	./configure --prefix=/usr --enable-openssl && \
+	make shared_library && \
+	make install
+
+RUN cd /tmp && \
+	git clone https://gitlab.freedesktop.org/libnice/libnice && \
+	cd libnice && \
+	git checkout 0.1.17 && \
+	./autogen.sh && \
+	./configure --prefix=/usr && \
+	make && \
+	make install
+
+COPY . /usr/local/src
+
+RUN cd /usr/local/src && \
+    git clone https://github.com/meetecho/janus-gateway.git && \
+    cd janus-gateway && \
+	./autogen.sh && \
+	./configure --enable-post-processing --prefix=/usr/local && \
+	make && \
+	make install && \
+	make configs
+
+#ffmpeg
 
 RUN mkdir -p ~/ffmpeg_sources ~/bin
 
@@ -131,13 +188,6 @@ RUN cd ~/ffmpeg_sources && \
 	make install && \
 	hash -r
 
-RUN cd /usr/local/src && \
-	mkdir live-stream && \
-	cd live-stream && \
-	git init && \
-	git pull https://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@github.com/Juunez/live-stream.git
+EXPOSE 8088
 
-EXPOSE 5006
-EXPOSE 5008
-
-CMD ["/usr/local/bin/ffmpeg"]
+CMD ["/usr/local/bin/janus", "--log-file=/usr/local/bin/logs"]

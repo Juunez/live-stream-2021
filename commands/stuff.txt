@@ -28,6 +28,7 @@ python3 -m http.server --directory site 8080
 
 ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -c:v h264 -c:a aac -ar 16k -ac 1 -preset ultrafast -tune zerolatency  -f flv rtmp://127.0.0.1:8888
 ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -ar 16k -ac 1 -preset ultrafast -tune zerolatency  -f flv rtmp://127.0.0.1:8888
+
 ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -c:v h264 -b:v 128k -c:a libopus -b:a 128k -y test.mp4
 
 ffmpeg -analyzeduration 1M -probesize 1M -protocol_whitelist file,udp,rtp -i test.sdp -c:v libvpx -b:v 128k -c:a libopus -b:a 128k -y test.mp4
@@ -37,9 +38,6 @@ ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i
 
 
 var register = {"request" : "rtp_forward","publisher_id": myid,"room" : myroom,"audio_port": 5002,"audio_pt": 111,"video_port": 5004,"video_pt": 100,"host": "127.0.0.1"}
-sfutest.send({message: register});
-
-var register = {"request" : "rtp_forward","publisher_id": myid,"room" : myroom,"audio_port": 5006,"audio_pt": 111,"video_port": 5008,"video_pt": 100,"host": "127.0.0.1"}
 sfutest.send({message: register});
 
 
