@@ -1,4 +1,3 @@
-http://127.0.0.1:8080/janus-gateway/html/screensharingtest.html
 http://localhost:8088/janus/info
 
 https://groups.google.com/g/meetecho-janus/c/JnPKN4gQ1Yg
@@ -13,4 +12,46 @@ https://mrcoles.com/how-start-local-web-server-view-html-files/
 wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1UHfAbKu4WU9VKIcnbyDTfEPA4Rf4NDel' 
 -O favicon.ico
 
-docker logs -f sharp_lamarr
+docker logs -f goofy_khayyam
+docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
+
+
+
+nc -l -p 8075 
+nc 127.0.0.1 8075
+telnet 127.0.0.1 8075
+sudo tcpdump -nei lo udp port 5004
+sudo tcpdump -nei eth0 udp port 5004
+
+python3 -m http.server --directory site 8080
+
+
+ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -c:v h264 -c:a aac -ar 16k -ac 1 -preset ultrafast -tune zerolatency  -f flv rtmp://127.0.0.1:8888
+ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -ar 16k -ac 1 -preset ultrafast -tune zerolatency  -f flv rtmp://127.0.0.1:8888
+ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -c:v h264 -b:v 128k -c:a libopus -b:a 128k -y test.mp4
+
+ffmpeg -analyzeduration 1M -probesize 1M -protocol_whitelist file,udp,rtp -i test.sdp -c:v libvpx -b:v 128k -c:a libopus -b:a 128k -y test.mp4
+ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -c:v libvpx -b:v 128k -y test.mp4
+
+ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -c:v copy -b:v 128k -c:a libopus -b:a 128k -y test.mp4
+
+
+var register = {"request" : "rtp_forward","publisher_id": myid,"room" : myroom,"audio_port": 5002,"audio_pt": 111,"video_port": 5004,"video_pt": 100,"host": "127.0.0.1"}
+sfutest.send({message: register});
+
+var register = {"request" : "rtp_forward","publisher_id": myid,"room" : myroom,"audio_port": 5006,"audio_pt": 111,"video_port": 5008,"video_pt": 100,"host": "127.0.0.1"}
+sfutest.send({message: register});
+
+
+var req = {"request" : "listforwarders","room" : myroom}
+sfutest.send({message: req});
+
+a=tool:libavformat 55.22.100
+
+
+VP9
+
+var register = {"request" : "rtp_forward","publisher_id": myid,"room" : myroom,"audio_port": 5006,"audio_pt": 111,"video_port": 5008,"video_pt": 100,"host": "127.0.0.1"}
+sfutest.send({message: register});
+
+ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -c:v libvpx-vp9 -b:v 128k -c:a libopus -b:a 128k -y test.mp4

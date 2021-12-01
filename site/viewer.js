@@ -309,7 +309,7 @@ function joinSession() {
 	var register = {
 		request: "join",
 		room: myroom,
-		ptype: "publisher",
+		ptype: "publisher", //role here?
 		display: myusername
 	};
 	sfutest.send({ message: register });

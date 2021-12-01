@@ -147,6 +147,11 @@ $(document).ready(function() {
 												Janus.log("User left: " + unpublished);
 												if(unpublished === 'ok') {
 													// That's us
+													//var register = {
+													//	"request" : "stop_rtp_forward",
+													//	"publisher_id": myid,
+													//	"room" : myroom}
+													//sfutest.send({message: register});
 													sfutest.hangup();
 													return;
 												}
@@ -232,6 +237,12 @@ $(document).ready(function() {
 										$('#videolocal .no-video-container').remove();
 										$('#myvideo').removeClass('hide').show();
 									}
+									//Janus.log("###### first part ######");
+									//var fr = {"request":"configure", "keyframe":true}
+									//sfutest.send({message: fr})
+									var register = {"request" : "rtp_forward","publisher_id": myid,"room" : myroom,"audio_port": 5006,"audio_pt": 111,"video_port": 5008,"video_pt": 100,"host": "127.0.0.1"}
+									sfutest.send({message: register});
+									//Janus.log("###### second part ######");
 								},
 								onremotestream: function(stream) {
 									// The publisher stream is sendonly, we don't expect anything here
@@ -303,8 +314,11 @@ function registerUsername() {
 		var create = {
 			request: "create",
 			description: desc,
-			bitrate: 500000,
-			publishers: 1
+			bitrate: 128000,
+			publishers: 1,
+			audiocoded: "opus",
+			videocodec: "vp9",
+			fir_freq: 2
 		};
 		sfutest.send({ message: create, success: function(result) {
 			var event = result["videoroom"];
@@ -329,6 +343,7 @@ function registerUsername() {
 function publishOwnFeed(useAudio) {
 	// Publish our stream
 	$('#publish').attr('disabled', true).unbind('click');
+	//$('rtp_forward').attr('disabled', true).unbind('click');
 	sfutest.createOffer(
 		{
 			// Add data:true here if you want to publish datachannels as well
@@ -339,6 +354,8 @@ function publishOwnFeed(useAudio) {
 			simulcast: doSimulcast,
 			simulcast2: doSimulcast2,
 			customizeSdp: function(jsep) {
+				Janus.log("###### first part ######");
+				Janus.log(jsep.sdp);
 				// If DTX is enabled, munge the SDP
 				if(doDtx) {
 					jsep.sdp = jsep.sdp
@@ -350,9 +367,9 @@ function publishOwnFeed(useAudio) {
 				var publish = { request: "configure", audio: useAudio, video: true };
 				// You can force a specific codec to use when publishing by using the
 				// audiocodec and videocodec properties, for instance:
-				// 		publish["audiocodec"] = "opus"
+				//publish["audiocodec"] = "opus"
 				// to force Opus as the audio codec to use, or:
-				// 		publish["videocodec"] = "vp9"
+				//publish["videocodec"] = "vp9"
 				// to force VP9 as the videocodec to use. In both case, though, forcing
 				// a codec will only work if: (1) the codec is actually in the SDP (and
 				// so the browser supports it), and (2) the codec is in the list of
@@ -375,6 +392,9 @@ function publishOwnFeed(useAudio) {
 				}
 			}
 		});
+	//var register = { request : "rtp_forward", publisher_id: myid, room : myroom, video_port: 8075, host: "localhost"}
+	
+	
 }
 
 function toggleMute() {

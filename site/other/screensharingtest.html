@@ -12,12 +12,12 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
 <script type="text/javascript" src="janus.js" ></script>
-<script type="text/javascript" src="streamer2.js"></script>
+<script type="text/javascript" src="screensharingtest.js"></script>
 <script>
 	$(function() {
-		$(".navbar-static-top").load("navbar.html", function() {
+		$(".navbar-static-top").load("../navbar.html", function() {
 			$(".navbar-static-top li.dropdown").addClass("active");
-			$(".navbar-static-top a[href='streamer2.html']").parent().addClass("active");
+			$(".navbar-static-top a[href='screensharingtest.html']").parent().addClass("active");
 		});
 	});
 </script>
@@ -54,6 +54,18 @@
 						<input class="form-control" type="text" placeholder="Insert a title for the session" autocomplete="off" id="desc" onkeypress="return checkEnterShare(this, event);" />
 						<span class="input-group-btn">
 							<button class="btn btn-success" autocomplete="off" id="create">Share your screen</button>
+						</span>
+					</div>
+				</div>
+				<div class="divider col-md-12">
+					<hr class="pull-left"/>or<hr class="pull-right"/>
+				</div>
+				<div class="row">
+					<div class="input-group margin-bottom-md hide" id="joinnow">
+						<span class="input-group-addon"><i class="fa fa-play-circle-o fa-1"></i></span>
+						<input class="form-control" type="text" placeholder="Insert the numeric session identifier" autocomplete="off" id="roomid" onkeypress="return checkEnterJoin(this, event);" />
+						<span class="input-group-btn">
+							<button class="btn btn-success" autocomplete="off" id="join">Join an existing session</button>
 						</span>
 					</div>
 				</div>

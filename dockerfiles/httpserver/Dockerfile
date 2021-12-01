@@ -6,6 +6,9 @@ RUN apt-get -y update && \
 		git \
 		wget
 
+ARG CACHEBUST=4
+RUN echo "$CACHEBUST"
+
 RUN cd /usr/local/src && \
 	mkdir live-stream && \
 	cd live-stream && \
