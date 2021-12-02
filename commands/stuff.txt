@@ -16,6 +16,7 @@ docker logs -f goofy_khayyam
 docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
 docker run -it -d ffmpeg1 bin/bash
 
+docker run -dp 5006:5006/udp -dp 5008:5008/udp -dp 8070:8070 hls1
 
 nc -l -p 8075 
 nc 127.0.0.1 8075
@@ -58,3 +59,4 @@ ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i
 ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -profile:v baseline -level 3.0 -s 640x360 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ../hls/index.m3u8
 ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -profile:v baseline -level 3.0 -s 640x360 -start_number 0 -hls_time 2 -hls_list_size 10 -hls_delete_threshold 10 -hls_flags delete_segments+split_by_time -f hls ../hls/index.m3u8
 ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -profile:v baseline -level 3.0 -s 640x360 -start_number 0 -hls_time 2 -hls_list_size 10 -hls_delete_threshold 10 -hls_flags delete_segments -f hls ../hls/index.m3u8
+
