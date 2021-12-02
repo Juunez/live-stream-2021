@@ -26,8 +26,8 @@ const hostname = '127.0.0.1';
 const port = 8070;
 
 //remove old streams, todo: remove old stream files after the stream has ended
-fs.rmSync("hls", { recursive: true, force: true});
-fs.mkdirSync("hls");
+fs.rmSync("/usr/local/src/live-stream/hls", { recursive: true, force: true});
+fs.mkdirSync("/usr/local/src/live-stream/hls");
 
 function runFfmpeg() {
     var proc = spawn(cmd, args);
@@ -53,6 +53,6 @@ http.createServer((req, res) => {
     } else {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');
-        res.end("hey");
+        res.end("nothing here");
     }
 }).listen(port);

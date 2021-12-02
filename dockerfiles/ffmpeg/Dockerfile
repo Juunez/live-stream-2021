@@ -131,7 +131,7 @@ RUN cd ~/ffmpeg_sources && \
 	make install && \
 	hash -r
 
-RUN apt-get install -y npm && npm install node-static
+RUN apt-get install -y npm && npm install node-static http fs url
 
 #increase CACHEBUST by 1 if live-stream repo changes are needed here
 ARG CACHEBUST=1
@@ -147,4 +147,4 @@ EXPOSE 5006/udp
 EXPOSE 5008/udp
 EXPOSE 8070
 
-CMD ["node", "app.js"]
+CMD ["node", "/usr/local/src/live-stream/node/app.js"]
