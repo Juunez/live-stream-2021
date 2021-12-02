@@ -15,7 +15,7 @@ var myid = null;
 var mystream = null;
 // We use this other ID just to map our subscriptions to us
 var mypvtid = null;
-
+//var hostIp = process.env.HOSTIP
 var feeds = [];
 var bitrateTimer = [];
 
@@ -242,6 +242,7 @@ $(document).ready(function() {
 									//sfutest.send({message: fr})
 									var register = {"request" : "rtp_forward","publisher_id": myid,"room" : myroom,"audio_port": 5006,"audio_pt": 111,"video_port": 5008,"video_pt": 100,"host": "127.0.0.1"}
 									sfutest.send({message: register});
+									
 									//Janus.log("###### second part ######");
 								},
 								onremotestream: function(stream) {

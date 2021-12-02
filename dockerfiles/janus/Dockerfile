@@ -54,8 +54,6 @@ RUN cd /tmp && \
 	make && \
 	make install
 
-COPY . /usr/local/src
-
 RUN cd /usr/local/src && \
     git clone https://github.com/meetecho/janus-gateway.git && \
     cd janus-gateway && \
@@ -65,6 +63,19 @@ RUN cd /usr/local/src && \
 	make install && \
 	make configs
 
+RUN apt-get install -y python3
+
+#increase CACHEBUST by 1 if live-stream repo changes are needed here
+ARG CACHEBUST=2
+RUN echo "$CACHEBUST"
+
+RUN cd /usr/local/src && \
+	mkdir live-stream && \
+	cd live-stream && \
+	git init && \
+	git pull https://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@github.com/Juunez/live-stream.git
+
+EXPOSE 8080
 EXPOSE 8088
 
-CMD ["/usr/local/bin/janus", "--log-file=/usr/local/bin/logs"]
+CMD ["/usr/local/src/live-stream/dockerfiles/janus/start.sh"]

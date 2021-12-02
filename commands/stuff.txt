@@ -60,3 +60,4 @@ ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i
 ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -profile:v baseline -level 3.0 -s 640x360 -start_number 0 -hls_time 2 -hls_list_size 10 -hls_delete_threshold 10 -hls_flags delete_segments+split_by_time -f hls ../hls/index.m3u8
 ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -profile:v baseline -level 3.0 -s 640x360 -start_number 0 -hls_time 2 -hls_list_size 10 -hls_delete_threshold 10 -hls_flags delete_segments -f hls ../hls/index.m3u8
 
+ENV HOSTIP = host.docker.internal

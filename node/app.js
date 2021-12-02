@@ -52,7 +52,7 @@ const port = 8070;
         }
     });
 }
-
+var ffmpegRunning = false;
 
 function runFfmpeg() {
     var proc = spawn2(cmd, args);
@@ -64,6 +64,7 @@ function runFfmpeg() {
         console.log(data);
     });
     proc.on('close', function() {
+        ffmpegRunning = false
         console.log('finished');
     });
   }
@@ -73,7 +74,8 @@ http.createServer((req, res) => {
     var path = q.pathname
     if (path.startsWith("/hls")) {
         file.serve(req, res);
-    } else if (path == "/ffmpeg") {
+    } else if (path == "/ffmpeg" && ffmpegRunning === false) {
+        ffmpegRunning = true;
         runFfmpeg();
     } else {
         res.statusCode = 200;
