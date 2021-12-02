@@ -17,6 +17,7 @@ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cont
 docker run -it -d ffmpeg1 bin/bash
 
 docker run -dp 5006:5006/udp -dp 5008:5008/udp -dp 8070:8070 hls1
+docker run -i -dp 8088:8088 -dp 8080:8080 rtp1
 
 nc -l -p 8075 
 nc 127.0.0.1 8075
