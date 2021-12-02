@@ -3,7 +3,7 @@ var static = require('node-static');
 var url = require('url');
 var fs = require('fs');
 
-var file = new(static.Server)("/usr/local/src/live-stream/hls");
+var file = new(static.Server)("/usr/local/src/live-stream");
 var spawn1 = require('child_process').spawn;
 var spawn2 = require('child_process').spawn;
 var cmd = '/root/bin/ffmpeg';
