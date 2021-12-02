@@ -5,6 +5,8 @@ if(window.location.protocol === 'http:')
 else
 	server = "https://" + window.location.hostname + ":8089/janus";
 
+var hostIp = "172.17.0.1"
+
 var janus = null;
 var sfutest = null;
 var opaqueId = "videoroomtest-"+Janus.randomString(12);
@@ -239,7 +241,7 @@ $(document).ready(function() {
 									//Janus.log("###### first part ######");
 									//var fr = {"request":"configure", "keyframe":true}
 									//sfutest.send({message: fr})
-									var register = {"request" : "rtp_forward","publisher_id": myid,"room" : myroom,"audio_port": 5006,"audio_pt": 111,"video_port": 5008,"video_pt": 100,"host": host.docker.internal}
+									var register = {"request" : "rtp_forward","publisher_id": myid,"room" : myroom,"audio_port": 5006,"audio_pt": 111,"video_port": 5008,"video_pt": 100,"host": hostIp}
 									sfutest.send({message: register});
 									
 									//Janus.log("###### second part ######");
