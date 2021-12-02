@@ -11,7 +11,7 @@ var args = [
     "-analyzeduration", "300M",
     "-probesize", "300M",
     "-protocol_whitelist", "file,udp,rtp",
-    "-i", "../sdp/test.sdp",
+    "-i", "/usr/local/src/live-stream/sdp/test.sdp",
     "-profile:v", "baseline",
     "-level", "3.0",
     "-s", "640x360",
@@ -20,7 +20,7 @@ var args = [
     "-hls_list_size", "10",
     "-hls_delete_threshold", "10",
     "-hls_flags", "delete_segments",
-    "-f", "hls", "hls/index.m3u8"
+    "-f", "hls", "/usr/local/src/live-stream/hls/index.m3u8"
 ]
 
 const hostname = '127.0.0.1';
