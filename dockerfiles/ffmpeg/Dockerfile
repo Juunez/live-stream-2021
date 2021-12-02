@@ -134,7 +134,7 @@ RUN cd ~/ffmpeg_sources && \
 RUN apt-get install -y npm
 
 #increase CACHEBUST by 1 if live-stream repo changes are needed here
-ARG CACHEBUST=3
+ARG CACHEBUST=5
 RUN echo "$CACHEBUST"
 
 RUN cd /usr/local/src && \
@@ -145,7 +145,6 @@ RUN cd /usr/local/src && \
 	cd node && \
 	npm install node-static http fs url
 
-COPY . .
 EXPOSE 5006/udp
 EXPOSE 5008/udp
 EXPOSE 8070

@@ -6,7 +6,7 @@ var fs = require('fs');
 var file = new(static.Server)(__dirname);
 var spawn1 = require('child_process').spawn;
 var spawn2 = require('child_process').spawn;
-var cmd = 'ffmpeg';
+var cmd = '/root/bin/ffmpeg';
 var args = [
     "-analyzeduration", "300M",
     "-probesize", "300M",
