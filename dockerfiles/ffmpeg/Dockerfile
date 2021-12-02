@@ -131,10 +131,10 @@ RUN cd ~/ffmpeg_sources && \
 	make install && \
 	hash -r
 
-RUN apt-get install -y npm && npm install node-static http fs url
+RUN apt-get install -y npm
 
 #increase CACHEBUST by 1 if live-stream repo changes are needed here
-ARG CACHEBUST=1
+ARG CACHEBUST=2
 RUN echo "$CACHEBUST"
 
 RUN cd /usr/local/src && \
@@ -142,7 +142,10 @@ RUN cd /usr/local/src && \
 	cd live-stream && \
 	git init && \
 	git pull https://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@github.com/Juunez/live-stream.git && \
-	cd node
+	cd node && \
+	npm install node-static http fs url
+
+COPY . .
 EXPOSE 5006/udp
 EXPOSE 5008/udp
 EXPOSE 8070

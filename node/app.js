@@ -5,6 +5,7 @@ var fs = require('fs');
 
 var file = new(static.Server)(__dirname);
 var spawn = require('child_process').spawn;
+var exec = require('child_process').exec;
 var cmd = 'ffmpeg';
 var args = [
     "-analyzeduration", "300M",
@@ -26,8 +27,32 @@ const hostname = '127.0.0.1';
 const port = 8070;
 
 //remove old streams, todo: remove old stream files after the stream has ended
-fs.rmSync("/usr/local/src/live-stream/hls", { recursive: true, force: true});
-fs.mkdirSync("/usr/local/src/live-stream/hls");
+{
+    var proc = spawn("rm", ["-r", "/usr/local/src/live-stream/hls"]);
+    proc.stdout.on('data', function(data) {
+        console.log(data);
+    });
+    proc.stderr.setEncoding("utf8")
+    proc.stderr.on('data', function(data) {
+        console.log(data);
+    });
+    proc.on('close', function() {
+        {
+            var proc = spawn("mkdir", ["/usr/local/src/live-stream/hls"]);
+            proc.stdout.on('data', function(data) {
+                console.log(data);
+            });
+            proc.stderr.setEncoding("utf8")
+            proc.stderr.on('data', function(data) {
+                console.log(data);
+            });
+            proc.on('close', function() {
+                console.log('finished emptying hls');
+            });
+        }
+    });
+}
+
 
 function runFfmpeg() {
     var proc = spawn(cmd, args);
