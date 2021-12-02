@@ -66,7 +66,7 @@ RUN cd /usr/local/src && \
 RUN apt-get install -y python3
 
 #increase CACHEBUST by 1 if live-stream repo changes are needed here
-ARG CACHEBUST=3
+ARG CACHEBUST=6
 RUN echo "$CACHEBUST"
 
 RUN cd /usr/local/src && \
@@ -75,7 +75,18 @@ RUN cd /usr/local/src && \
 	git init && \
 	git pull https://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@github.com/Juunez/live-stream.git
 
+ENV HOSTIP = ${DOCKER_GATEWAY_HOST:-host.docker.internal}
+
 EXPOSE 8080
 EXPOSE 8088
 
-CMD ["/usr/local/src/live-stream/dockerfiles/janus/start.sh"]
+#run janus and http server at startup, requires docker run -it
+RUN echo ${HOSTIP} >> /usr/local/src/live-stream/site/hostIp.txt && \
+	/bin/echo -e \
+	"#!/bin/bash\n\
+/usr/local/bin/janus --log-file=/usr/local/bin/logs &\n\
+python3 -m http.server --directory /usr/local/src/live-stream/site 8080 &\n\
+/bin/bash"\
+	 > /usr/local/bin/onstartup.sh && \
+	chmod 777 /usr/local/bin/onstartup.sh
+CMD /usr/local/bin/onstartup.sh
