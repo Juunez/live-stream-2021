@@ -14,7 +14,7 @@ wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1UHfA
 
 docker logs -f goofy_khayyam
 docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
-
+docker run -it -d ffmpeg1 bin/bash
 
 
 nc -l -p 8075 
@@ -24,6 +24,7 @@ sudo tcpdump -nei lo udp port 5004
 sudo tcpdump -nei eth0 udp port 5004
 
 python3 -m http.server --directory site 8080
+/usr/local/bin/janus
 
 
 ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -c:v h264 -c:a aac -ar 16k -ac 1 -preset ultrafast -tune zerolatency  -f flv rtmp://127.0.0.1:8888
@@ -52,4 +53,8 @@ VP9
 var register = {"request" : "rtp_forward","publisher_id": myid,"room" : myroom,"audio_port": 5006,"audio_pt": 111,"video_port": 5008,"video_pt": 100,"host": "127.0.0.1"}
 sfutest.send({message: register});
 
-ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -c:v libvpx-vp9 -b:v 128k -c:a libopus -b:a 128k -y test.mp4
+ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -c:v libvpx-vp9 -b:v 128k -c:a libopus -b:a 128k -y ../hls/test.mp4
+
+ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -profile:v baseline -level 3.0 -s 640x360 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ../hls/index.m3u8
+ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -profile:v baseline -level 3.0 -s 640x360 -start_number 0 -hls_time 2 -hls_list_size 10 -hls_delete_threshold 10 -hls_flags delete_segments+split_by_time -f hls ../hls/index.m3u8
+ffmpeg -analyzeduration 300M -probesize 300M -protocol_whitelist file,udp,rtp -i test.sdp -profile:v baseline -level 3.0 -s 640x360 -start_number 0 -hls_time 2 -hls_list_size 10 -hls_delete_threshold 10 -hls_flags delete_segments -f hls ../hls/index.m3u8

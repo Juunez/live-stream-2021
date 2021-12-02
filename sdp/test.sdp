@@ -1,6 +1,6 @@
 v=0
 o=- 0 0 IN IP4 127.0.0.1
-s=RTP Video
+s=
 c=IN IP4 127.0.0.1
 t=0 0
 m=audio 5006 RTP/AVP 111

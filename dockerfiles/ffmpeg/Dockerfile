@@ -131,6 +131,8 @@ RUN cd ~/ffmpeg_sources && \
 	make install && \
 	hash -r
 
+RUN apt-get install -y npm && npm install node-static
+
 #increase CACHEBUST by 1 if live-stream repo changes are needed here
 ARG CACHEBUST=1
 RUN echo "$CACHEBUST"
@@ -139,9 +141,10 @@ RUN cd /usr/local/src && \
 	mkdir live-stream && \
 	cd live-stream && \
 	git init && \
-	git pull https://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@github.com/Juunez/live-stream.git
+	git pull https://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@github.com/Juunez/live-stream.git && \
+	cd node
+EXPOSE 5006/udp
+EXPOSE 5008/udp
+EXPOSE 8070
 
-EXPOSE 5006
-EXPOSE 5008
-
-CMD ["/usr/local/bin/ffmpeg"]
+CMD ["node", "app.js"]
