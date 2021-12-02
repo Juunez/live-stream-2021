@@ -4,8 +4,8 @@ var url = require('url');
 var fs = require('fs');
 
 var file = new(static.Server)(__dirname);
-var spawn = require('child_process').spawn;
-var exec = require('child_process').exec;
+var spawn1 = require('child_process').spawn;
+var spawn2 = require('child_process').spawn;
 var cmd = 'ffmpeg';
 var args = [
     "-analyzeduration", "300M",
@@ -28,7 +28,7 @@ const port = 8070;
 
 //remove old streams, todo: remove old stream files after the stream has ended
 {
-    var proc = spawn("rm", ["-r", "/usr/local/src/live-stream/hls"]);
+    var proc = spawn1("rm", ["-r", "/usr/local/src/live-stream/hls"]);
     proc.stdout.on('data', function(data) {
         console.log(data);
     });
@@ -38,7 +38,7 @@ const port = 8070;
     });
     proc.on('close', function() {
         {
-            var proc = spawn("mkdir", ["/usr/local/src/live-stream/hls"]);
+            var proc = spawn1("mkdir", ["/usr/local/src/live-stream/hls"]);
             proc.stdout.on('data', function(data) {
                 console.log(data);
             });
@@ -55,7 +55,7 @@ const port = 8070;
 
 
 function runFfmpeg() {
-    var proc = spawn(cmd, args);
+    var proc = spawn2(cmd, args);
     proc.stdout.on('data', function(data) {
         console.log(data);
     });
