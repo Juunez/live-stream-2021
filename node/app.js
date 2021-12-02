@@ -8,8 +8,8 @@ var spawn1 = require('child_process').spawn;
 var spawn2 = require('child_process').spawn;
 var cmd = '/root/bin/ffmpeg';
 var args = [
-    "-analyzeduration", "1M",
-    "-probesize", "1M",
+    "-analyzeduration", "300M",
+    "-probesize", "300M",
     "-protocol_whitelist", "file,udp,rtp",
     "-i", "/usr/local/src/live-stream/sdp/test.sdp",
     "-profile:v", "baseline",
