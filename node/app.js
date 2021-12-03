@@ -69,7 +69,6 @@ function runFfmpeg() {
     });
 }
 //always run ffmpeg when server starts, ffmpeg waits for input forever.
-//runFfmpeg();
 
 http.createServer((req, res) => {
     var q = url.parse(req.url, true);
