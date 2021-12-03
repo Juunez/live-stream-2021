@@ -8,6 +8,8 @@ var spawn1 = require('child_process').spawn;
 var spawn2 = require('child_process').spawn;
 var cmd = '/root/bin/ffmpeg';
 var args = [
+    "-timeout", "-1",
+    "-stimeout", "100000000",
     "-analyzeduration", "300M",
     "-probesize", "300M",
     "-protocol_whitelist", "file,udp,rtp",
@@ -22,6 +24,7 @@ var args = [
     "-hls_flags", "delete_segments",
     "-f", "hls", "/usr/local/src/hls/index.m3u8"
 ]
+
 
 //const hostname = '127.0.0.1';
 const port = 8070;
@@ -52,7 +55,6 @@ const port = 8070;
         }
     });
 }
-var ffmpegRunning = false;
 
 function runFfmpeg() {
     var proc = spawn2(cmd, args);
@@ -64,21 +66,18 @@ function runFfmpeg() {
         console.log(data);
     });
     proc.on('close', function() {
-        ffmpegRunning = false
         console.log('finished');
+        runFfmpeg();
     });
-  }
+}
+//always run ffmpeg when server starts, ffmpeg waits for input forever.
+runFfmpeg();
 
 http.createServer((req, res) => {
     var q = url.parse(req.url, true);
     var path = q.pathname
     if (path.startsWith("/index")) {
-        ffmpegRunning = true;
-        runFfmpeg();
         file.serve(req, res);
-    } else if (path == "/ffmpeg" && ffmpegRunning === false) {
-        ffmpegRunning = true;
-        runFfmpeg();
     } else {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');
