@@ -11,8 +11,8 @@ var args = [
     "-analyzeduration", "300M",
     "-probesize", "300M",
     "-protocol_whitelist", "file,udp,rtp",
+    "-rtsp_flags", "listen",
     "-listen_timeout", "-1",
-    "-stimeout", "1000000000",
     "-i", "/usr/local/src/live-stream/sdp/test.sdp",
     "-profile:v", "baseline",
     "-level", "3.0",
@@ -78,6 +78,8 @@ http.createServer((req, res) => {
     var path = q.pathname
     if (path.startsWith("/index")) {
         file.serve(req, res);
+    } else if(path.startsWith("/restartffmpeg")){
+        runFfmpeg();
     } else {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');
