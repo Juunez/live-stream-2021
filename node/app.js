@@ -9,7 +9,6 @@ var spawn2 = require('child_process').spawn;
 var cmd = '/root/bin/ffmpeg';
 var args = [
     "-timeout", "-1",
-    "-stimeout", "100000000",
     "-analyzeduration", "300M",
     "-probesize", "300M",
     "-protocol_whitelist", "file,udp,rtp",
