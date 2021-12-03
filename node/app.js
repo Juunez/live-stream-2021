@@ -69,13 +69,15 @@ function runFfmpeg() {
     });
 }
 //always run ffmpeg when server starts, ffmpeg waits for input forever.
-runFfmpeg();
+//runFfmpeg();
 
 http.createServer((req, res) => {
     var q = url.parse(req.url, true);
     var path = q.pathname
     if (path.startsWith("/index")) {
         file.serve(req, res);
+    } else if (path.startsWith("/ffmpeg") {
+        runFfmpeg();
     } else {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');
