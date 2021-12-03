@@ -11,7 +11,6 @@ var args = [
     "-analyzeduration", "300M",
     "-probesize", "300M",
     "-protocol_whitelist", "file,udp,rtp",
-    "-rtsp_flags", "listen",
     "-listen_timeout", "-1",
     "-i", "/usr/local/src/live-stream/sdp/test.sdp",
     "-profile:v", "baseline",
