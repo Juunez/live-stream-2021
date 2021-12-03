@@ -75,7 +75,7 @@ http.createServer((req, res) => {
     var path = q.pathname
     if (path.startsWith("/index")) {
         file.serve(req, res);
-    } else if (path.startsWith("/ffmpeg") {
+    } else if (path.startsWith("/ffmpeg")) {
         runFfmpeg();
     } else {
         res.statusCode = 200;
