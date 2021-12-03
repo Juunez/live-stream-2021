@@ -3,7 +3,7 @@ var static = require('node-static');
 var url = require('url');
 var fs = require('fs');
 
-var file = new(static.Server)("/usr/local/src/live-stream");
+var file = new(static.Server)("/usr/local/src/hls");
 var spawn1 = require('child_process').spawn;
 var spawn2 = require('child_process').spawn;
 var cmd = '/root/bin/ffmpeg';
@@ -20,15 +20,15 @@ var args = [
     "-hls_list_size", "10",
     "-hls_delete_threshold", "10",
     "-hls_flags", "delete_segments",
-    "-f", "hls", "/usr/local/src/live-stream/hls/index.m3u8"
+    "-f", "hls", "/usr/local/src/hls/index.m3u8"
 ]
 
-const hostname = '127.0.0.1';
+//const hostname = '127.0.0.1';
 const port = 8070;
 
 //remove old streams, todo: remove old stream files after the stream has ended
 {
-    var proc = spawn1("rm", ["-r", "/usr/local/src/live-stream/hls"]);
+    var proc = spawn1("rm", ["-r", "/usr/local/src/hls"]);
     proc.stdout.on('data', function(data) {
         console.log(data);
     });
@@ -38,7 +38,7 @@ const port = 8070;
     });
     proc.on('close', function() {
         {
-            var proc = spawn1("mkdir", ["/usr/local/src/live-stream/hls"]);
+            var proc = spawn1("mkdir", ["/usr/local/src/hls"]);
             proc.stdout.on('data', function(data) {
                 console.log(data);
             });
@@ -72,7 +72,7 @@ function runFfmpeg() {
 http.createServer((req, res) => {
     var q = url.parse(req.url, true);
     var path = q.pathname
-    if (path.startsWith("/hls")) {
+    if (path.startsWith("/index")) {
         file.serve(req, res);
     } else if (path == "/ffmpeg" && ffmpegRunning === false) {
         ffmpegRunning = true;

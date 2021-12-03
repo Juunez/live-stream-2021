@@ -1,2 +1,2 @@
 # live-stream
-httpserver Dockerfile requires token to my private github repo
+httpserver Dockerfiles require token to my private github repo

@@ -143,7 +143,8 @@ RUN cd /usr/local/src && \
 	git init && \
 	git pull https://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@github.com/Juunez/live-stream.git && \
 	cd node && \
-	npm install node-static http fs url
+	npm install node-static http fs url && \
+	mkdir /usr/local/src/hls
 
 EXPOSE 5006/udp
 EXPOSE 5008/udp

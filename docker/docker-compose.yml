@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  rtp-server:
+    build: ./janus
+    ports:
+      - "8080:8080"
+      - "8088:8088"
+    stdin_open: true
+    tty: true
+  hls-server:
+    build: ./ffmpeg
+    ports:
+      - "5006:5006/udp"
+      - "5008:5008/udp"
+      - "8070:8070"
