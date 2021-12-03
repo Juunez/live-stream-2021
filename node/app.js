@@ -73,6 +73,8 @@ http.createServer((req, res) => {
     var q = url.parse(req.url, true);
     var path = q.pathname
     if (path.startsWith("/index")) {
+        ffmpegRunning = true;
+        runFfmpeg();
         file.serve(req, res);
     } else if (path == "/ffmpeg" && ffmpegRunning === false) {
         ffmpegRunning = true;
