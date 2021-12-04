@@ -134,7 +134,7 @@ RUN cd ~/ffmpeg_sources && \
 RUN apt-get install -y npm
 
 #increase CACHEBUST by 1 if live-stream repo changes are needed here
-ARG CACHEBUST=56
+ARG CACHEBUST=57
 RUN echo "$CACHEBUST"
 
 RUN cd /usr/local/src && \
