@@ -8,6 +8,7 @@ var file = new(static.Server)("/usr/local/src/hls");
 var spawn1 = require('child_process').spawn;
 var spawn2 = require('child_process').spawn;
 var spawn3 = require('child_process').spawn;
+const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 var cmd = '/root/bin/ffmpeg';
 var args = [
     "-analyzeduration", "3M",
@@ -103,6 +104,9 @@ http.createServer((req, res) => {
         file.serve(req, res);
     } else if(path.startsWith("/restartffmpeg")){
         killFfmpeg();
+        console.log(1)
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log(2);
         runFfmpeg();
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');
