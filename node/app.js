@@ -79,7 +79,7 @@ function runFfmpeg() {
     });
 }
 
-function killFfmpeg(res1) {
+async function killFfmpeg(res1) {
     console.log('killing ffmpeg');
     var proc = child_process.spawn("killall", ["-w", "ffmpeg"])
     proc.stdout.on('data', function(data) {
@@ -91,6 +91,10 @@ function killFfmpeg(res1) {
     });
     proc.on('close', function() {
         console.log('killed ffmpeg');
+        console.log(1)
+        await sleep(2000);
+        console.log(2);
+        runFfmpeg();
     });
     
 }
@@ -105,10 +109,6 @@ http.createServer(async (req, res) => {
         file.serve(req, res);
     } else if(path.startsWith("/restartffmpeg")){
         killFfmpeg();
-        console.log(1)
-        await sleep(1000);
-        console.log(2);
-        runFfmpeg();
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');
         res.end("ffmpeg at HLS-server restarted.");
