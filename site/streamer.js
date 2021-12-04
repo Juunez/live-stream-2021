@@ -189,7 +189,7 @@ $(document).ready(function() {
 											$('#myvideo').hide();
 											$('#videolocal').append(
 												'<div class="no-video-container">' +
-													'<i class="fa fa-video-camera fa-5 no-video-icon" style="height: 100%;"></i>' +
+													'<i class="fa fa-video-camera fa-5 no-video-icon" style="height: 200%;"></i>' +
 													'<span class="no-video-text" style="font-size: 16px;">Video rejected, no webcam</span>' +
 												'</div>');
 										}
@@ -201,7 +201,7 @@ $(document).ready(function() {
 									$('#videojoin').hide();
 									$('#videos').removeClass('hide').show();
 									if($('#myvideo').length === 0) {
-										$('#videolocal').append('<video class="rounded centered" id="myvideo" width="300%" height="300%" autoplay playsinline muted="muted"/>');
+										$('#videolocal').append('<video class="rounded centered" id="myvideo" width="200%" height="200%" autoplay playsinline muted="muted"/>');
 										// Add a 'mute' button
 										$('#videolocal').append('<button class="btn btn-warning btn-xs" id="mute" style="position: absolute; bottom: 0px; left: 0px; margin: 15px;">Mute</button>');
 										$('#mute').click(toggleMute);
