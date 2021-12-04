@@ -7,6 +7,7 @@ Both Dockerfiles require token to my private github repo
 To launch, type docker compose up --build in /docker.
 streamer page is available at localhost:8080/streamer.html
 viewer page is available at localhost:8080/viewer.html
+To view a stream, the streamer must provide the unique 16-length number to any viewers. It will be unique each session.
 HLS stream is available at http://localhost:8070/index.m3u8 .This can be viewed e.g. with VLC player or any HLS player
 
 Problems:
