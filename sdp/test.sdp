@@ -7,4 +7,4 @@ m=audio 5006 RTP/AVP 111
 a=rtpmap:111 OPUS/48000/2
 m=video 5008 RTP/AVP 100
 a=rtpmap:100 VP9/90000
-a=fmtp:100 packetization-mode=1
+a=fmtp:100 packetization-mode=1;max-recv-width=1280;max-recv-height=720

@@ -15,7 +15,7 @@ var args = [
     "-i", "/usr/local/src/live-stream/sdp/test.sdp",
     "-profile:v", "baseline",
     "-level", "3.0",
-    "-s", "480x360",
+    "-s", "1280x720",
     "-start_number", "0",
     "-hls_time", "2",
     "-hls_list_size", "5",
