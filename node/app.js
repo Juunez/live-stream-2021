@@ -6,6 +6,7 @@ var fs = require('fs');
 var file = new(static.Server)("/usr/local/src/hls");
 var spawn1 = require('child_process').spawn;
 var spawn2 = require('child_process').spawn;
+var spawn3 = require('child_process').spawn;
 var cmd = '/root/bin/ffmpeg';
 var args = [
     "-analyzeduration", "3M",
@@ -60,6 +61,7 @@ const port = 8070;
     });
 }
 
+
 function runFfmpeg() {
     var proc = spawn2(cmd, args);
     proc.stdout.on('data', function(data) {
@@ -70,11 +72,29 @@ function runFfmpeg() {
         console.log(data);
     });
     proc.on('close', function() {
-        console.log('finished');
-        runFfmpeg(); //restart ffmpeg, keep ffmpeg looking for stream forever
+        console.log('restarted ffmpeg');
     });
 }
+
 //always run ffmpeg when server starts
+function restartFfmpeg(res1) {
+    var proc = spawn3("killall", ["ffmpeg"])
+    proc.stdout.on('data', function(data) {
+        console.log(data);
+    });
+    proc.stderr.setEncoding("utf8")
+    proc.stderr.on('data', function(data) {
+        console.log(data);
+    });
+    proc.on('close', function() {
+        console.log('finished');
+    });
+    runFfmpeg();
+    res1.statusCode = 200;
+    res1.setHeader('Content-Type', 'text/plain');
+    res1.end("ffmpeg at HLS-server restarted.");
+}
+
 runFfmpeg();
 
 http.createServer((req, res) => {
@@ -83,7 +103,7 @@ http.createServer((req, res) => {
     if (path.startsWith("/index")) {
         file.serve(req, res);
     } else if(path.startsWith("/restartffmpeg")){
-        runFfmpeg();
+        restartFfmpeg(res);
     } else {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');

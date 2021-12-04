@@ -12,7 +12,7 @@ HLS stream is available at http://localhost:8070/index.m3u8 .This can be viewed 
 
 Problems:
 
-If you stop publishing at streamer page, the hls stream stops working (ffmpeg gets stuck). To fix that, you must restart the hls server. This does not affect the viewer page.
+If you stop publishing at streamer page, the hls stream stops working (ffmpeg gets stuck). To fix that, you must load localhost:8070/restartffmpeg once. This does not affect the viewer page.
 
 Streamer and viewer pages work independently of the hls server and don't need it.
 You might have to change hostIP in streamer.js to the ip that the host system is from the perspective of the docker container, if it seems that hls stream does not work (hls server ports 5006 and 5008 don't receive any data when stream is on).
