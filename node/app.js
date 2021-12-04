@@ -40,15 +40,15 @@ const port = 8070;
     });
     proc.on('close', function() {
         {
-            var proc = spawn1("mkdir", ["/usr/local/src/hls"]);
-            proc.stdout.on('data', function(data) {
+            var proc2 = spawn1("mkdir", ["/usr/local/src/hls"]);
+            proc2.stdout.on('data', function(data) {
                 console.log(data);
             });
-            proc.stderr.setEncoding("utf8")
-            proc.stderr.on('data', function(data) {
+            proc2.stderr.setEncoding("utf8")
+            proc2.stderr.on('data', function(data) {
                 console.log(data);
             });
-            proc.on('close', function() {
+            proc2.on('close', function() {
                 console.log('finished emptying hls');
             });
         }
