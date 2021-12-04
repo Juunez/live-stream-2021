@@ -23,6 +23,9 @@ var args = [
     "-hls_delete_threshold", "5",
     "-hls_flags", "delete_segments",
     "-vsync", "2",
+    "-preset", "ultrafast",
+    "-flags",
+    "-global_header",
     "-f", "hls", "/usr/local/src/hls/index.m3u8"
 ]
 
