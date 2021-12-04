@@ -26,6 +26,7 @@ var args = [
     "-preset", "ultrafast",
     "-flags",
     "-global_header",
+    "-force_key_frames", "expr:gte(t,n_forced*2)",
     "-f", "hls", "/usr/local/src/hls/index.m3u8"
 ]
 
