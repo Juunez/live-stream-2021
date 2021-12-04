@@ -93,7 +93,7 @@ async function killFfmpeg(res1) {
         console.log('killed ffmpeg');
         console.log(1)
         await sleep(2000);
-        console.log(2);
+        console.log(1);
         runFfmpeg();
     });
     
@@ -108,6 +108,7 @@ http.createServer(async (req, res) => {
     if (path.startsWith("/index")) {
         file.serve(req, res);
     } else if(path.startsWith("/restartffmpeg")){
+        await killFfmpeg(); //ugly temporary fix
         await killFfmpeg();
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');
