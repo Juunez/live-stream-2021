@@ -91,9 +91,7 @@ function killFfmpeg(res1) {
     proc.on('close', function() {
         console.log('killed ffmpeg');
     });
-    res1.statusCode = 200;
-    res1.setHeader('Content-Type', 'text/plain');
-    res1.end("ffmpeg at HLS-server restarted.");
+    
 }
 
 runFfmpeg();
@@ -104,8 +102,11 @@ http.createServer((req, res) => {
     if (path.startsWith("/index")) {
         file.serve(req, res);
     } else if(path.startsWith("/restartffmpeg")){
-        killFfmpeg(res);
-        runFfmpeg;
+        killFfmpeg();
+        runFfmpeg();
+        res1.statusCode = 200;
+        res1.setHeader('Content-Type', 'text/plain');
+        res1.end("ffmpeg at HLS-server restarted.");
     } else {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');
