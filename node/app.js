@@ -22,7 +22,7 @@ var args = [
     "-hls_delete_threshold", "50",
     "-hls_flags", "delete_segments",
     "-vsync", "2",
-    "-preset", "ultrafast",
+    //"-preset", "ultrafast",
     "-flags",
     "-global_header",
     "-force_key_frames", "expr:gte(t,n_forced*2)",
