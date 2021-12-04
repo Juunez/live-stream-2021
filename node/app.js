@@ -108,7 +108,7 @@ http.createServer(async (req, res) => {
     if (path.startsWith("/index")) {
         file.serve(req, res);
     } else if(path.startsWith("/restartffmpeg")){
-        killFfmpeg();
+        await killFfmpeg();
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');
         res.end("ffmpeg at HLS-server restarted.");
