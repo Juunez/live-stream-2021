@@ -244,7 +244,7 @@ $(document).ready(function() {
 											$('#myvideo').hide();
 											$('#videolocal').append(
 												'<div class="no-video-container">' +
-													'<i class="fa fa-video-camera fa-5 no-video-icon" style="height: 100%;"></i>' +
+													'<i class="fa fa-video-camera fa-5 no-video-icon" style="height: 200%;"></i>' +
 													'<span class="no-video-text" style="font-size: 16px;">Video rejected, no webcam</span>' +
 												'</div>');
 										}
@@ -444,7 +444,7 @@ function newRemoteFeed(id, display, audio, video) {
 					$('#videoremote'+remoteFeed.rfindex).append('<video class="rounded centered relative hide" id="remotevideo' + remoteFeed.rfindex + '" width="200%" height="200%" autoplay playsinline/>');
 					$('#videoremote'+remoteFeed.rfindex).append(
 						'<span class="label label-primary hide" id="curres'+remoteFeed.rfindex+'" style="position: absolute; bottom: 0px; left: 0px; margin: 15px;"></span>' +
-						'<span class="label label-info hide" id="curbitrate'+remoteFeed.rfindex+'" style="position: absolute; bottom: 0px; right: 0px; margin: 15px;"></span>');
+						'<span class="label label-info hide" id="curbitrate'+remoteFeed.rfindex+'" style="position: absolute; bottom: 0px; left: 100px; margin: 15px;"></span>');
 					// Show the video, hide the spinner and show the resolution when we get a playing event
 					$("#remotevideo"+remoteFeed.rfindex).bind("playing", function () {
 						if(remoteFeed.spinner)

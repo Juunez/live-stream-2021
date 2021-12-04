@@ -206,7 +206,7 @@ $(document).ready(function() {
 										$('#videolocal').append('<button class="btn btn-warning btn-xs" id="mute" style="position: absolute; bottom: 0px; left: 0px; margin: 15px;">Mute</button>');
 										$('#mute').click(toggleMute);
 										// Add an 'unpublish' button
-										$('#videolocal').append('<button class="btn btn-warning btn-xs" id="unpublish" style="position: absolute; bottom: 0px; right: 0px; margin: 15px;">Unpublish</button>');
+										$('#videolocal').append('<button class="btn btn-warning btn-xs" id="unpublish" style="position: absolute; bottom: 0px; left: 100px; margin: 15px;">Unpublish</button>');
 										$('#unpublish').click(unpublishOwnFeed);
 									}
 									$('#publisher').removeClass('hide').html(myusername).show();
@@ -316,7 +316,7 @@ function registerUsername() {
 		var create = {
 			request: "create",
 			description: desc,
-			bitrate: 256000, //2048000 1280×720
+			bitrate: 2048000,
 			publishers: 1,
 			audiocoded: "opus",
 			videocodec: "vp9",
