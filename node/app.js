@@ -98,7 +98,7 @@ function killFfmpeg(res1) {
 runFfmpeg();
 const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
 
-http.createServer((req, res) => {
+http.createServer(async (req, res) => {
     var q = url.parse(req.url, true);
     var path = q.pathname
     if (path.startsWith("/index")) {
