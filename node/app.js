@@ -105,7 +105,7 @@ http.createServer((req, res) => {
     } else if(path.startsWith("/restartffmpeg")){
         killFfmpeg();
         console.log(1)
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        new Promise(resolve => setTimeout(resolve, 1000));
         console.log(2);
         runFfmpeg();
         res.statusCode = 200;
