@@ -2,6 +2,7 @@ const http = require('http');
 var static = require('node-static');
 var url = require('url');
 var fs = require('fs');
+var child_process = require('child_process')
 
 var file = new(static.Server)("/usr/local/src/hls");
 var spawn1 = require('child_process').spawn;
@@ -63,7 +64,7 @@ const port = 8070;
 
 
 function runFfmpeg() {
-    var proc = spawn2(cmd, args);
+    var proc = child_process.spawn(cmd, args);
     proc.stdout.on('data', function(data) {
         console.log(data);
     });
@@ -78,7 +79,7 @@ function runFfmpeg() {
 
 //always run ffmpeg when server starts
 function restartFfmpeg(res1) {
-    var proc = spawn3("killall", ["ffmpeg"])
+    var proc = child_process.spawn("killall", ["ffmpeg"])
     proc.stdout.on('data', function(data) {
         console.log(data);
     });
