@@ -89,7 +89,7 @@ async function killFfmpeg(res1) {
     proc.stderr.on('data', function(data) {
         console.log(data);
     });
-    proc.on('close', function() {
+    proc.on('close', async function() {
         console.log('killed ffmpeg');
         console.log(1)
         await sleep(2000);
