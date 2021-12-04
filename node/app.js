@@ -17,7 +17,7 @@ var args = [
     "-level", "3.0",
     "-s", "480x360",
     "-start_number", "0",
-    "-hls_time", "10",
+    "-hls_time", "1",
     "-hls_list_size", "10",
     "-hls_delete_threshold", "10",
     "-hls_flags", "delete_segments",
