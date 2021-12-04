@@ -320,7 +320,7 @@ function registerUsername() {
 			publishers: 1,
 			audiocoded: "opus",
 			videocodec: "vp9",
-			fir_freq: 1
+			fir_freq: 2
 		};
 		sfutest.send({ message: create, success: function(result) {
 			var event = result["videoroom"];
