@@ -79,7 +79,7 @@ function runFfmpeg() {
 
 //always run ffmpeg when server starts
 function restartFfmpeg(res1) {
-    var proc = child_process.spawn("killall", ["ffmpeg"])
+    var proc = child_process.spawn("killall", ["-w", "ffmpeg"])
     proc.stdout.on('data', function(data) {
         console.log(data);
     });
