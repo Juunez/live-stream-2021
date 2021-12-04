@@ -316,7 +316,7 @@ function registerUsername() {
 		var create = {
 			request: "create",
 			description: desc,
-			bitrate: 256000,
+			bitrate: 256000, //2048000 1280×720
 			publishers: 1,
 			audiocoded: "opus",
 			videocodec: "vp9",
@@ -349,7 +349,7 @@ function publishOwnFeed(useAudio) {
 	sfutest.createOffer(
 		{
 			// Add data:true here if you want to publish datachannels as well
-			media: { audioRecv: false, videoRecv: false, audioSend: useAudio, videoSend: true },	// Publishers are sendonly
+			media: { audioRecv: false, videoRecv: false, audioSend: useAudio, videoSend: true, video:"hires-16:9" },	// Publishers are sendonly
 			// If you want to test simulcasting (Chrome and Firefox only), then
 			// pass a ?simulcast=true when opening this demo page: it will turn
 			// the following 'simulcast' property to pass to janus.js to true
