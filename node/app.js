@@ -64,6 +64,7 @@ const port = 8070;
 
 
 function runFfmpeg() {
+    console.log('launching ffmpeg');
     var proc = child_process.spawn(cmd, args);
     proc.stdout.on('data', function(data) {
         console.log(data);
@@ -73,12 +74,12 @@ function runFfmpeg() {
         console.log(data);
     });
     proc.on('close', function() {
-        console.log('restarted ffmpeg');
+        console.log('ffmpeg closed');
     });
 }
 
-//always run ffmpeg when server starts
-function restartFfmpeg(res1) {
+function killFfmpeg(res1) {
+    console.log('killing ffmpeg');
     var proc = child_process.spawn("killall", ["-w", "ffmpeg"])
     proc.stdout.on('data', function(data) {
         console.log(data);
@@ -88,9 +89,8 @@ function restartFfmpeg(res1) {
         console.log(data);
     });
     proc.on('close', function() {
-        console.log('finished');
+        console.log('killed ffmpeg');
     });
-    runFfmpeg();
     res1.statusCode = 200;
     res1.setHeader('Content-Type', 'text/plain');
     res1.end("ffmpeg at HLS-server restarted.");
@@ -104,7 +104,8 @@ http.createServer((req, res) => {
     if (path.startsWith("/index")) {
         file.serve(req, res);
     } else if(path.startsWith("/restartffmpeg")){
-        restartFfmpeg(res);
+        killFfmpeg(res);
+        runFfmpeg;
     } else {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');
