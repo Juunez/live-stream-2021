@@ -316,7 +316,7 @@ function registerUsername() {
 		var create = {
 			request: "create",
 			description: desc,
-			bitrate: 128000,
+			bitrate: 256000,
 			publishers: 1,
 			audiocoded: "opus",
 			videocodec: "vp9",
