@@ -2,8 +2,6 @@ This project was done as a course-assignment in Aalto University.
 
 This is a two server structure for streaming your webcam live-feed to a WebRTC server(using Janus) which can then be viewed by multiply users live. The stream is also forwarded to a HLS server by Janus, where the RTP-stream is converted to HLS live stream. This HLS stream can be the viewed by viewes. The WebRTC server also contains the official Janus demo for video room.
 
-Both Dockerfiles require token to my private github repo
-
 To launch, type docker compose up --build in /docker.
 streamer page is available at localhost:8080/streamer.html
 viewer page is available at localhost:8080/viewer.html
